@@ -21,11 +21,16 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message =
-      error.response?.data?.error ||
-      error.response?.data?.message ||
-      error.message ||
-      "An unexpected network error occurred";
+    // axios sets error.response only when the server actually replied.
+    // Its absence means the request never got a response (server down,
+    // unreachable, CORS block, etc.) — give users an actionable message
+    // instead of axios's raw "Network Error" string.
+    const message = error.response
+      ? error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred"
+      : "Unable to reach the server. It may be temporarily unavailable — please try again in a moment.";
     return Promise.reject(new Error(message));
   }
 );
