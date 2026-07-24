@@ -8,7 +8,13 @@ import { RiSparklingFill } from "react-icons/ri";
 import { io } from "socket.io-client";
 import api, { API_BASE_URL } from "../api";
 
-let socket = io(API_BASE_URL);
+let socket = io(API_BASE_URL, {
+  transports: ["websocket", "polling"],
+  reconnection: true,
+  reconnectionAttempts: 20,
+  reconnectionDelay: 2000,
+  reconnectionDelayMax: 10000,
+});
 
 function Home(){
 
