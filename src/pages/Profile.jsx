@@ -106,16 +106,25 @@ function Profile(){
       formData.append("file", selectedFile);
       formData.append("email", userEmail);
 
-      let res = await api.post("/users/profile-picture", formData);
+      let res = await api.post("/users/profile-picture", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (res.data && res.data.photoURL) {
         let newPhotoURL = res.data.photoURL;
 
-        // Update Firebase Auth current user profile
+        // Update Firebase Auth current user profile if available
         if (auth.currentUser) {
-          await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
+          try {
+            await updateProfile(auth.currentUser, { photoURL: newPhotoURL });
+          } catch (fbErr) {
+            console.warn("[Firebase Profile Sync Warning]:", fbErr);
+          }
         }
 
+        // Update UI state immediately
         setPhotoURL(newPhotoURL);
         setSuccessMsg("Profile picture updated successfully! ✨");
         setSelectedFile(null);
