@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --ig-gradient: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  --ig-gradient-v: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  --ig-purple: #833ab4;
+  --ig-red: #fd1d1d;
+  --ig-orange: #fcb045;
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-card: #111111;
+  --bg-input: #1a1a1a;
+  --border-color: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: #a8a8a8;
+  --text-muted: #737373;
+  --accent: #c13584;
+}
+
+html, body {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}

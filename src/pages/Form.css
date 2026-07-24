@@ -1,0 +1,490 @@
+/* =============================================
+   Instagram-Inspired Theme - Form.css
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Base Layout ── */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #000;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(131, 58, 180, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(253, 29, 29, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(252, 176, 69, 0.04) 0%, transparent 80%);
+  margin: 0;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+}
+
+/* ── Form Box Card ── */
+.form-box {
+  background: #111;
+  padding: 40px 36px;
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 1px #262626,
+    0 20px 60px rgba(0,0,0,0.8),
+    0 0 80px rgba(131,58,180,0.06);
+  width: 440px;
+  text-align: center;
+  border: 1px solid #262626;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.form-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+  opacity: 0.8;
+}
+
+/* ── Heading ── */
+.form-box h2 {
+  margin-bottom: 28px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, #ffffff 0%, #a8a8a8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.form-box h2 svg {
+  -webkit-text-fill-color: initial;
+  color: #c13584;
+  filter: drop-shadow(0 0 6px rgba(193,53,132,0.6));
+}
+
+/* ── Form Groups ── */
+.form-group {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #737373;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  border: 1.5px solid #262626;
+  border-radius: 10px;
+  outline: none;
+  background: #1a1a1a;
+  color: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: #4a4a4a;
+}
+
+.form-group input:focus {
+  border-color: #833ab4;
+  background: #1e1e1e;
+  box-shadow: 0 0 0 3px rgba(131,58,180,0.15), 0 0 20px rgba(131,58,180,0.08);
+}
+
+/* ── Primary Submit Button ── */
+button[type="submit"],
+.form-box > form > button[type="submit"] {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  background-size: 200% 200%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(193,53,132,0.4);
+  filter: brightness(1.08);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* ── General Buttons ── */
+button {
+  width: 100%;
+  padding: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* ── Button Group ── */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #fff;
+  border: 1px solid #262626;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  background: #1a1a1a;
+}
+
+.button-group button:hover {
+  border-color: #833ab4;
+  box-shadow: 0 0 12px rgba(131,58,180,0.2);
+  transform: translateY(-1px);
+  background: #1e1622;
+}
+
+/* Override inline-styled buttons in button-group */
+.button-group button[style] {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+}
+
+.button-group button[style]:hover {
+  background: #222 !important;
+}
+
+/* ── Divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: #555;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #262626;
+}
+
+/* ── Links ── */
+a {
+  color: #c13584;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ── Google Auth Button ── */
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25 ease;
+  margin-top: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.google-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.google-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.google-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ── Profile Picture & Avatar Styles ── */
+.avatar-wrapper {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 14px;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #833ab4;
+  box-shadow: 0 0 0 3px #111, 0 8px 24px rgba(131,58,180,0.4);
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 0 0 3px #111, 0 0 0 5px #833ab4, 0 8px 24px rgba(131,58,180,0.4);
+}
+
+.avatar-edit-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #c13584;
+  border: 2px solid #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.avatar-edit-badge:hover {
+  transform: scale(1.1);
+  background: #e1306c;
+}
+
+.file-dropzone {
+  border: 2px dashed #262626;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  background: #161616;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.file-dropzone:hover {
+  border-color: #833ab4;
+  background: #1c1722;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: #262626;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+  transition: width 0.3s ease;
+}
+
+.alert-box {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-success {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+/* ── Keyframe Animations ── */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes popCheckmark {
+  0% {
+    transform: scale(0) rotate(-30deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15) rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animated-card {
+  animation: fadeInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animated-checkmark {
+  animation: popCheckmark 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Password Strength Bar ── */
+.strength-bar-bg {
+  width: 100%;
+  height: 4px;
+  background: #262626;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.strength-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease;
+}
+
+/* ── Checklist Items ── */
+.validation-checklist {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  font-size: 11px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #555555;
+  transition: color 0.2s ease;
+}
+
+.checklist-item.valid {
+  color: #4ade80;
+}
+
+.checklist-item.invalid {
+  color: #555555;
+}
+
+/* ── Responsive Mobile Adjustments ── */
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+  .form-box {
+    padding: 28px 20px;
+    width: 100%;
+    border-radius: 14px;
+  }
+  .validation-checklist {
+    grid-template-columns: 1fr;
+  }
+}

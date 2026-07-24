@@ -1,0 +1,11 @@
+[build]
+  # Directory Vite outputs the production build to
+  publish = "dist"
+  # Build command
+  command = "npm run build"
+
+# SPA Routing — redirect all paths to index.html so React Router works
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
