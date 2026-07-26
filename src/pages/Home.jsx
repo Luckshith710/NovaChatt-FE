@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Form.css";
 import "./Home.css";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { FiSend, FiCamera, FiUser, FiLogOut } from "react-icons/fi";
+import { FiSend, FiCamera, FiUser, FiLogOut, FiAlertCircle } from "react-icons/fi";
 import { RiSparklingFill } from "react-icons/ri";
 import { io } from "socket.io-client";
 import api, { API_BASE_URL } from "../api";
@@ -22,6 +22,8 @@ function Home(){
   let [message, setMessage] = useState("");
   let [username, setUsername] = useState(null);
   let [photoURL, setPhotoURL] = useState(null);
+  let [isConnected, setIsConnected] = useState(socket.connected);
+  let [sendError, setSendError] = useState(null);
   let endRef = useRef(null);
 
   let auth = getAuth();
@@ -32,7 +34,14 @@ function Home(){
       if (!user) {
         nav("/login");
       } else {
-        setUsername(user.email);
+        let userEmail = user.email;
+        setUsername(userEmail);
+
+        if (socket.connected) {
+          socket.emit("join", { username: userEmail });
+          console.log(`👤 [Frontend] User joined socket session: ${userEmail}`);
+        }
+
         if (user.photoURL) {
           setPhotoURL(user.photoURL);
         } else if (user.email) {
@@ -52,16 +61,65 @@ function Home(){
   }, [auth, nav]);
 
   useEffect(() => {
-    socket.on("history", (data) => setChat(data));
-    socket.emit("getHistory");
+    const onConnect = () => {
+      console.log(`🟢 [Frontend] Connected to Socket.IO server at ${API_BASE_URL}. Socket ID: ${socket.id}`);
+      setIsConnected(true);
+      setSendError(null);
 
-    socket.on("message", (data) => setChat((prev) => [...prev, data]));
-    
-    return () => {
-      socket.off("history");
-      socket.off("message");
+      if (username) {
+        socket.emit("join", { username });
+      }
+      socket.emit("getHistory");
     };
-  }, []);
+
+    const onDisconnect = (reason) => {
+      console.warn(`🟠 [Frontend] Disconnected from Socket.IO server: ${reason}`);
+      setIsConnected(false);
+    };
+
+    const onConnectError = (err) => {
+      console.error(`🔴 [Frontend] Socket connection error:`, err.message || err);
+      setIsConnected(false);
+      setSendError(`Server connection issue (${err.message || "Disconnected"}). Retrying...`);
+    };
+
+    const onHistory = (data) => {
+      console.log(`📜 [Frontend] Received chat history (${Array.isArray(data) ? data.length : 0} messages)`);
+      if (Array.isArray(data)) {
+        setChat(data);
+      }
+    };
+
+    const onMessage = (data) => {
+      console.log(`📩 [Socket event received] New message received on frontend:`, data);
+      setChat((prev) => {
+        if (data._id && prev.some((m) => m._id === data._id)) {
+          return prev;
+        }
+        return [...prev, data];
+      });
+    };
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("connect_error", onConnectError);
+    socket.on("history", onHistory);
+    socket.on("message", onMessage);
+
+    if (socket.connected) {
+      onConnect();
+    } else {
+      socket.connect();
+    }
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("connect_error", onConnectError);
+      socket.off("history", onHistory);
+      socket.off("message", onMessage);
+    };
+  }, [username]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -86,10 +144,41 @@ function Home(){
   }
 
   function sendMessage() {
-    if (username && message.trim()) {
-      socket.emit("message", { username, message, photoURL });
-      setMessage("");
+    setSendError(null);
+
+    if (!username) {
+      setSendError("User authentication missing. Please log in again.");
+      return;
     }
+
+    let cleanMessage = message.trim();
+    if (!cleanMessage) return;
+
+    let payload = {
+      username,
+      message: cleanMessage,
+      photoURL
+    };
+
+    console.log(`📤 [Message sent from frontend] Payload:`, payload);
+
+    if (!socket.connected) {
+      console.warn("⚠️ [Frontend] Socket is currently disconnected. Reconnecting...");
+      socket.connect();
+    }
+
+    socket.emit("message", payload, (response) => {
+      if (response && response.success) {
+        console.log(`✅ [Frontend] Backend acknowledged message save & broadcast:`, response.message);
+        setSendError(null);
+      } else {
+        let errText = response?.error || "Failed to deliver message to server.";
+        console.error(`❌ [Frontend error] Message send failed:`, errText);
+        setSendError(errText);
+      }
+    });
+
+    setMessage("");
   }
 
   function getInitial(email) {
@@ -163,6 +252,25 @@ function Home(){
           </button>
         </div>
 
+        {/* ── Connection Status / Error Banner ── */}
+        {sendError && (
+          <div style={{
+            background: "rgba(239, 68, 68, 0.15)",
+            border: "1px solid rgba(239, 68, 68, 0.3)",
+            color: "#fca5a5",
+            padding: "8px 12px",
+            borderRadius: "8px",
+            marginBottom: "12px",
+            fontSize: "13px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px"
+          }}>
+            <FiAlertCircle style={{ flexShrink: 0 }} />
+            <span>{sendError}</span>
+          </div>
+        )}
+
         {/* ── Chat Box ── */}
         <div className="chat-box">
           <div className="chat-messages">
@@ -178,7 +286,7 @@ function Home(){
 
               return (
                 <div
-                  key={index}
+                  key={data._id || index}
                   className={`chat-row ${isSelf ? "sent" : "received"}`}
                 >
                   <div className="chat-sender" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -204,12 +312,17 @@ function Home(){
               <input
                 type="text"
                 className="chat-input"
-                placeholder="Message..."
+                placeholder={isConnected ? "Message..." : "Connecting to server..."}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") sendMessage(); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                }}
               />
-              <button className="send-btn" onClick={sendMessage}>
+              <button className="send-btn" onClick={sendMessage} title="Send Message">
                 <FiSend style={{ color: 'inherit' }} />
               </button>
             </div>
