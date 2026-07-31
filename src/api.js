@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // VITE_API_URL must be set in your deployment environment.
-// Fallback to https://rizzchat-be-rqqe.onrender.com for production.
-const RAW_API_URL = import.meta.env.VITE_API_URL || "https://rizzchat-be-rqqe.onrender.com";
+// Fallback to https://novachatt-be.onrender.com for production.
+const RAW_API_URL = import.meta.env.VITE_API_URL || "https://novachatt-be.onrender.com";
 const API_BASE_URL = RAW_API_URL.replace(/\/+$/, "");
 
 if (!import.meta.env.VITE_API_URL) {
