@@ -47,21 +47,15 @@ function ForgotPassword() {
       setEmail("");
     } catch (err) {
       const status = err?.status;
-      console.error("[Password Reset Error]", { status, detail: err.message });
+      const backendMessage = err?.message || err?.response?.data?.error;
+      console.error("[Password Reset Error]", { status, detail: backendMessage });
 
       if (status === 404) {
         setErrorMsg("No account found with this email address.");
       } else if (status === 400) {
-        setErrorMsg("Please enter a valid email address.");
-      } else if (status === 500) {
-        setErrorMsg("Unable to send the password reset email. Please try again later.");
+        setErrorMsg(backendMessage || "Please enter a valid email address.");
       } else {
-        // Network connection error, timeout, or server offline
-        setErrorMsg(
-          err.message && err.message.includes("Unable to connect")
-            ? err.message
-            : "Unable to send the password reset email. Please try again later."
-        );
+        setErrorMsg(backendMessage || "Unable to send the password reset email. Please try again later.");
       }
     } finally {
       setLoading(false);
