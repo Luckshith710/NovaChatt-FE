@@ -31,10 +31,23 @@ api.interceptors.response.use(
       error.response?.status === 503 ||
       error.response?.status === 504;
 
+    // Allow individual requests to opt out of the retry loop.
+    // Usage: api.post(url, data, { skipRetry: true })
+    if (config && config.skipRetry) {
+      const enrichedError = new Error(
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred. Please try again."
+      );
+      enrichedError.status = error.response?.status ?? null;
+      return Promise.reject(enrichedError);
+    }
+
     // Retry up to 3 times automatically while Render wakes up
     if (config && isNetworkOrTimeout && config._retryCount < 3) {
       config._retryCount += 1;
-      const delayMs = config._retryCount * 3000;
+      const delayMs = config._retryCount * 2000; // 2s, 4s, 6s
       console.warn(
         `[Backend Cold-Start Retry] Attempt ${config._retryCount}/3 for ${config.url}. Waiting ${delayMs / 1000}s for server wake-up...`
       );
@@ -69,7 +82,10 @@ api.interceptors.response.use(
       message = error.message;
     }
 
-    return Promise.reject(new Error(message));
+    const enrichedError = new Error(message);
+    // Preserve the HTTP status so callers can branch on specific codes
+    enrichedError.status = error.response?.status ?? null;
+    return Promise.reject(enrichedError);
   }
 );
 
