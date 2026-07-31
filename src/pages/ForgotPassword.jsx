@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Form.css";
 import { FiMail, FiSend, FiArrowLeft, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
-import api from "../api";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 function ForgotPassword() {
   let [email, setEmail] = useState("");
@@ -25,37 +25,21 @@ function ForgotPassword() {
     setErrorMsg("");
     setSuccessMsg("");
 
-    console.log("%c[Password Reset Request]", "color: #fcb045; font-weight: bold;");
-    console.log(` - Target Email: "${cleanEmail}"`);
-
     try {
-      console.log("[Password Reset] Sending request to backend...");
-      const response = await api.post(
-        "/api/forgot-password",
-        { email: cleanEmail },
-        {
-          // Skip the cold-start retry loop: this endpoint calls Gmail SMTP
-          // which already has its own 20s hard timeout. Retrying would only
-          // multiply the wait time and keep the UI spinning for minutes.
-          skipRetry: true,
-          // 30s is enough for the backend's 20s SMTP deadline + processing
-          timeout: 30000,
-        }
-      );
-      console.log("[Password Reset] Success:", response.data);
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, cleanEmail);
+      console.log("[Password Reset] Firebase sent reset email to:", cleanEmail);
       setSuccessMsg("A password reset link has been sent to your email.");
       setEmail("");
     } catch (err) {
-      const status = err?.status;
-      const backendMessage = err?.message || err?.response?.data?.error;
-      console.error("[Password Reset Error]", { status, detail: backendMessage });
+      console.error("[Password Reset Error]", err.code, err.message);
 
-      if (status === 404) {
+      if (err.code === "auth/user-not-found" || err.code === "auth/invalid-email") {
         setErrorMsg("No account found with this email address.");
-      } else if (status === 400) {
-        setErrorMsg(backendMessage || "Please enter a valid email address.");
+      } else if (err.code === "auth/too-many-requests") {
+        setErrorMsg("Too many requests. Please wait a moment and try again.");
       } else {
-        setErrorMsg(backendMessage || "Unable to send the password reset email. Please try again later.");
+        setErrorMsg("Unable to send the password reset email. Please try again.");
       }
     } finally {
       setLoading(false);
