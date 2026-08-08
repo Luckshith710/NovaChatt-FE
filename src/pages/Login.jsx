@@ -84,16 +84,18 @@ function Login() {
 
         {/* ── Logo ── */}
         <div style={{ marginBottom: "28px" }}>
-          <div style={{
-            width: "56px", height: "56px",
-            borderRadius: "16px",
-            background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-            margin: "0 auto 16px",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 8px 24px rgba(193,53,132,0.4)",
-          }}>
-            <span style={{ fontSize: "26px" }}>💬</span>
-          </div>
+          <img
+            src="/logo-icon.png"
+            alt="NovaChat Logo"
+            style={{
+              width: "64px",
+              height: "64px",
+              borderRadius: "16px",
+              margin: "0 auto 16px",
+              display: "block",
+              boxShadow: "0 8px 24px rgba(71, 191, 255, 0.35)",
+            }}
+          />
           <h2 style={{ marginBottom: "4px" }}>Welcome back</h2>
           <p style={{ color: "#555", fontSize: "13px", margin: 0 }}>Sign in to your NovaChat account</p>
         </div>

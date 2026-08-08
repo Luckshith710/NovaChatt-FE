@@ -196,21 +196,18 @@ function ChangePassword() {
         
         {/* ── NovaChat Header ── */}
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
-          <div
+          <img
+            src="/logo-icon.png"
+            alt="NovaChat Logo"
             style={{
-              width: "56px",
-              height: "56px",
+              width: "60px",
+              height: "60px",
               borderRadius: "16px",
-              background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-              margin: "0 auto 12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 8px 24px rgba(193, 53, 132, 0.4)",
+              margin: "0 auto 16px",
+              display: "block",
+              boxShadow: "0 8px 24px rgba(71, 191, 255, 0.35)",
             }}
-          >
-            <span style={{ fontSize: "26px" }}>💬</span>
-          </div>
+          />
 
           <h2 style={{ fontSize: "24px", margin: "0 0 4px", fontWeight: "700" }}>
             NovaChat <RiSparklingFill style={{ color: "#c13584", fontSize: "20px" }} />
